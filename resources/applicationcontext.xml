@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--name属性值不能改-->
+
+    <!--测试Spring环境-->
+    <bean id="date" class="java.util.Date"></bean>
+    <!--开启service扫描路径-->
+    <context:component-scan base-package="service"></context:component-scan>
+    <!--加载properties-->
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+    <!--配置数据源（连接池）-->
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="url" value="${jdbc.Url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!-- 3.将SqlSessionFactory交给Spring去管理  -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入数据源，因为获取连接之后，才能打开会话 -->
+        <property name="dataSource" ref="datasource"></property>
+        <!-- 配置别名 -->
+        <property name="typeAliasesPackage" value="domain"></property>
+        <!-- 加载所有的mapper文件 -->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"></property>
+    </bean>
+    <!-- 4.将Mapper接口交给Spring去管理 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定mapper接口的包路径 -->
+        <property name="basePackage" value="mapper"></property>
+    </bean>
+
+</beans>

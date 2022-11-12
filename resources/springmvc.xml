@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--扫描路径包-->
+    <context:component-scan base-package="controller"></context:component-scan>
+    <!--释放静态资源 会让注解失效-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+    <!--使注解生效-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--前缀-->
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <!--后缀-->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <!-- 文件上传解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="200000000000000000"/>
+        <property name="defaultEncoding" value="utf-8"></property>
+    </bean>
+    <!-- 配置拦截器组 -->
+    <mvc:interceptors>
+        <!-- 拦截器 -->
+        <mvc:interceptor>
+            <!-- 要拦截的配置，该配置必须写在不拦截的上面，/*拦截一级请求，/**拦截多级请求 -->
+            <mvc:mapping path="/**"  />
+            <!-- 设置不拦截的配置 -->
+            <mvc:exclude-mapping path="/F/*"/>
+            <mvc:exclude-mapping path="/download"/>
+            <!-- 配置拦截器 -->
+            <bean class="intercppor.myintercpptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>

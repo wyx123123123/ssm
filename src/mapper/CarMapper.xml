@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.Carmapper">
+    <select id="findall" resultType="Car">
+      select * from car
+<where>
+    <if test="id!=null">
+        and id=#{id}
+    </if>
+    <if test="colour!=null and !colour.equals('')">
+        and colour=#{colour}
+    </if>
+    <if test="brank!=null and !brank.equals('')">
+        and brank=#{brank}
+    </if>
+</where>
+    </select>
+  <select id="delete">
+      delete from car where id=#{id}
+  </select>
+    <select id="add">
+      insert into car (colour,brank) values (#{colour},#{brank})
+    </select>
+    <select id="update">
+        update car set colour=#{colour},brank=#{brank} where id=#{id}
+    </select>
+    <select id="findone" resultType="Car">
+        select *from car where id=#{id}
+    </select>
+</mapper>
